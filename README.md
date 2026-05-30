@@ -1,0 +1,9 @@
+tool：两个工具函数
+llmapi：访问大模型接口封装
+readinout：命令行输入封装
+agentloop：主程序入口
+.env配置环境变量，tool里的.env不必理会，测试时候用的
+总之用ts实现了一个有上下文的react范式的智能旅游助手，原本hello agents里循环六次，这里改成了无限循环，并且任务完成也不退出，输入exit才能退出
+但有一个问题就是如果agent完不成任务永远不会finished，就会一直循环下去
+这个项目很简单，有上下文，没有上下文管理，没有用到function calling而是让content携带工具名和参数，通过正则来解析
+没有skills，rag，记忆管理，总之很菜的agent
