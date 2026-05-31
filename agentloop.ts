@@ -4,6 +4,7 @@ import { get_weather } from './tool/get_weather.ts';
 import { getattraction } from './tool/get_attraction.ts';
 import {readInput} from './readinout.ts'
 import {ToolExecutor} from './utils/tooluse.ts'
+import {search} from './tool/get_search.ts'
 const api_key = process.env.OPENAI_API_KEY!;
 const base_url = process.env.OPENAI_BASE_URL!;
 const model = process.env.MODEL_ID!;
@@ -25,6 +26,12 @@ executor.registerTool(
   "根据城市和天气推荐旅游景点，参数：city:string, weather:string",
   getattraction
 );
+
+executor.registerTool(
+  "search",
+  "用于在网络上搜索信息，参数：query: string",
+  search
+);
 const toolDesc = executor.getAvailableTools();
 console.log("所有工具描述：");
 console.log(toolDesc);
@@ -35,7 +42,8 @@ let AGENT_SYSTEM_PROMPT:any =
     tool:'- get_weather(city: string): 查询指定城市的实时天气 - get_attraction(city: string, weather: string)`: 根据城市和天气搜索推荐的旅游景点',
     output:'输出格式要求：你的每次回复必须是严格遵循以下格式的数据，包含一对Thought和Action：Thought: [你的思考过程和下一步计划], Action: [你要执行的具体行动]',
     action:'Action的格式必须是以下之一：1. 调用工具：function_name("arg_value")2. 结束任务：Finish[最终答案]',
-    important:'# 重要提示:- 每次只输出一对Thought-Action - Action必须在同一行，不要换行- 当收集到足够信息可以回答用户问题时，必须使用 Action: Finish[最终答案] 格式结束'
+    important:'# 重要提示:- 每次只输出一对Thought-Action - Action必须在同一行，不要换行- 当收集到足够信息可以回答用户问题时，必须使用 Action: Finish[最终答案] 格式结束',
+    constraint: '# 重要约束：只使用与用户请求直接相关的工具。用户只问天气就不要推荐景点，用户没问的事情不要做。',
 }
 function bulidsystem(){
     AGENT_SYSTEM_PROMPT.tool=toolDesc
@@ -108,7 +116,7 @@ for (let i = 0; i < MAX_ITERATIONS; i++) {
 
 
 
-    
+
     if (Object.keys(kwargs).length > 0) {
         args = Object.values(kwargs);
     } else {

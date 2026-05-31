@@ -37,7 +37,7 @@ interface SerpSearchResult {
  * @param query 搜索关键词
  * @returns 格式化后的搜索结果文本
  */
-async function search(query: string): Promise<string> {
+export async function search(query: string): Promise<string|object> {
   console.log(`🔍 正在执行 [SerpApi] 网页搜索: ${query}`);
 
   try {
@@ -99,13 +99,5 @@ async function search(query: string): Promise<string> {
 
 // ===================== 调用示例 =====================
 // 测试调用（异步函数必须用 await）
-async function runTest() {
-  const res = await search("北京今天天气");
-  console.log("\n搜索结果：\n", res);
-}
 
-// 执行测试
-runTest();
 
-// 导出函数（供你的 Agent 工具执行器注册使用）
-export default search;
