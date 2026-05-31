@@ -1,7 +1,10 @@
 {
   "dependencies": {
+    "@tavily/core": "^0.7.3",
     "axios": "^1.16.1",
-    "openai": "^6.39.1"
+    "dotenv": "^17.4.2",
+    "openai": "^6.39.1",
+    "serpapi": "^2.2.1"
   },
   "devDependencies": {
     "@types/axios": "^0.9.36"
